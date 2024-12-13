@@ -1,5 +1,11 @@
 cmake_minimum_required(VERSION 3.31 FATAL_ERROR)
 
-project(Game)
+set(PROJECT_NAME Game)
 
-add_executable(Game src/main.cpp )
+project(${PROJECT_NAME})
+
+add_executable(${PROJECT_NAME} src/main.cpp )
+
+add_subdirectory(external/gfw)
+
+target_link_libraries(${PROJECT_NAME} glfw)
