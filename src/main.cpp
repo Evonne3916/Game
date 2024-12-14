@@ -4,46 +4,62 @@
 
 int main(void)
 {
-    GLFWwindow* window;
 
-    /* Initialize the library */
+    /* инициализация glfw */
     if (!glfwInit())
-        return -1;
-
-    /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
-    if (!window)
     {
-        glfwTerminate();
+        std::cout << "glfw init failed" << std::endl;
         return -1;
     }
 
-    /* Make the window's context current */
-    glfwMakeContextCurrent(window);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+    /* создание окна */
+    GLFWwindow*  pWindow = glfwCreateWindow(640, 480, "Game", nullptr, nullptr);
+    if (!pWindow)
+    {
+        glfwTerminate();
+        std::cout << "glfwCreateWindow failed" << std::endl;
+        return -1;
+    }
+
+    /* контекст opengl для этого окна */
+    glfwMakeContextCurrent(pWindow);
+
+
+    /* инициализация glad */
     if (!gladLoadGL())
     {
         std::cout<< "error" << std::endl;
         return -1;
     }
 
-    std::cout<<"OpenGL"<<GLVersion.major<<"."<<GLVersion.major<<std::endl;
+
+    /* вывод информации */
+    std::cout << "render:" << glGetString(GL_RENDERER) << std::endl;
+    std::cout << "opengl ver:" << glGetString(GL_VERSION) << std::endl;
+
+
     
     glClearColor(0, 1, 0, 1);
 
-    /* Loop until the user closes the window */
-    while (!glfwWindowShouldClose(window))
+    /* Цикл пока окно открыто */
+    while (!glfwWindowShouldClose(pWindow))
     {
-        /* Render here */
+        /* очистка буфера цвета */
         glClear(GL_COLOR_BUFFER_BIT);
 
-        /* Swap front and back buffers */
-        glfwSwapBuffers(window);
+        /* свап буферов (вертикальная синхронизация) */
+        glfwSwapBuffers(pWindow);
 
-        /* Poll for and process events */
+        /* позволяет glfw получить данные */
+        /* нажатие клавиш, изменение размера окна */
         glfwPollEvents();
     }
 
+    /* освобождение ресурсов */
     glfwTerminate();
     return 0;
 }
