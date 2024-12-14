@@ -2,6 +2,28 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 
+
+int g_windowSizeX = 640;
+int g_windowSizeY = 480;
+
+
+void glfwWindowSizeCallback(GLFWwindow* pWindow, int width, int height)
+{
+    g_windowSizeX = width;
+    g_windowSizeY = height;
+    glViewport(0, 0, g_windowSizeX, g_windowSizeY);
+
+}
+
+void glfwKeyCallback(GLFWwindow* pWindow, int key, int scancode, int action, int mode)
+{
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+    {
+        glfwSetWindowShouldClose(pWindow, GL_TRUE);
+    }
+}
+
+
 int main(void)
 {
 
@@ -17,13 +39,18 @@ int main(void)
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     /* создание окна */
-    GLFWwindow*  pWindow = glfwCreateWindow(640, 480, "Game", nullptr, nullptr);
+    GLFWwindow*  pWindow = glfwCreateWindow(g_windowSizeX, g_windowSizeY, "Game", nullptr, nullptr);
     if (!pWindow)
     {
         glfwTerminate();
         std::cout << "glfwCreateWindow failed" << std::endl;
         return -1;
     }
+
+
+    glfwSetWindowSizeCallback(pWindow, glfwWindowSizeCallback);
+    glfwSetKeyCallback(pWindow, glfwKeyCallback);
+
 
     /* контекст opengl для этого окна */
     glfwMakeContextCurrent(pWindow);
